@@ -22,11 +22,11 @@
           </Menu>
           <Menu mnemonicParsing="false" text="ADB">
             <items>
-                  <MenuItem mnemonicParsing="false" text="Start server" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleAdbStart" text="Start server" />
               <MenuItem mnemonicParsing="false" text="Start as sudo" />
-                  <MenuItem mnemonicParsing="false" text="Restart server" />
-                  <MenuItem mnemonicParsing="false" text="Kill server" />
-                  <MenuItem mnemonicParsing="false" text="Version" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleRestartServer" text="Restart server" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleAdbKillServer" text="Kill server" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleAdbVersion" text="Version" />
                   <MenuItem mnemonicParsing="false" text="Refresh device" />
             </items>
           </Menu>
@@ -37,5 +37,24 @@
           </Menu>
         </menus>
       </MenuBar>
+      <GridPane layoutY="510.0" prefHeight="100.0" prefWidth="700.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button mnemonicParsing="false" onAction="#handleInstallApk" text="Install apk" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#handleUninstallApk" text="Uninstall APK" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#handleRebootDevice" text="Reboot device" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#handleShutdownDevice" text="Shutdown device" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#handleAdbLogcat" text="ADB logcat" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+         </children>
+      </GridPane>
+      <TextArea fx:id="textArea" layoutX="50.0" layoutY="52.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0" />
    </children>
 </AnchorPane>

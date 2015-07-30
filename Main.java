@@ -28,7 +28,6 @@ public class Main extends Application {
         primaryStage.setTitle("ADC - Android Device Controller");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-        Controller.getOsType();                              // zjisteni OS a ulozeni do promenne OS
         primaryStage.setOnCloseRequest(event -> {
             ButtonType buttonType = dialogy.Confirm("Close", "Do you really want to leave this program?").get();
             if (buttonType == ButtonType.OK) Platform.exit();
