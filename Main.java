@@ -18,12 +18,14 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     protected static Stage stage;
+    protected static String OS;
 
     private Dialogy dialogy = new Dialogy();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         Main.stage = primaryStage;
+        OS = getOsType();
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("ADC - Android Device Controller");
         primaryStage.setScene(new Scene(root));
@@ -41,6 +43,13 @@ public class Main extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private String getOsType() {
+        if (System.getProperty("os.name").equals("Windows")) OS = "win";
+        if (System.getProperty("os.name").equals("Linux")) OS = "nix";
+        if (System.getProperty("os.name").equals("Mac")) OS = "mac";
+        return OS;
     }
 
     public static void main(String[] args) {

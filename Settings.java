@@ -2,10 +2,12 @@ package sample;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 /**
@@ -14,7 +16,17 @@ import javafx.stage.Stage;
 public class Settings extends Application{
 
     private Dialogy dialogy = new Dialogy();
+    private FileOperator fileOperator = new FileOperator();
+
     private static Stage settingsStage;
+
+    private String ADB_PATH;
+    private String FASTBOOT_PATH;
+
+    @FXML
+    private TextField adb_path_textfield;
+    @FXML
+    private TextField fastboot_path_textfield;
 
     @Override
     public void start(Stage settingsStage) throws Exception {
@@ -34,6 +46,16 @@ public class Settings extends Application{
                 }
             } else System.exit(0);
         });
+    }
+
+    public void handleChooseAdbPath (ActionEvent event){
+        ADB_PATH = fileOperator.open().getPath();
+        adb_path_textfield.setText(ADB_PATH);
+    }
+
+    public void handleChooseFastbootPath (ActionEvent event){
+        FASTBOOT_PATH = fileOperator.open().getPath();
+        fastboot_path_textfield.setText(FASTBOOT_PATH);
     }
 
     public void handleSaveAndBack(ActionEvent event){

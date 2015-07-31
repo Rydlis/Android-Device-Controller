@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.scene.control.Alert;
+
 import java.io.*;
 
 /**
@@ -9,13 +11,16 @@ import java.io.*;
 public class Adb {
 
     //* konstruktor bez parametru
-    public Adb(){
-
+    public Adb(String OS){
+        this.OS = OS;
     }
 
     private String OS;
     private ProcessBuilder pb;
     private Process pc;
+    private String adbLogcatOutput;
+
+    private Boolean isRunning = false;
 
     public void Install (File file){
         pb = new ProcessBuilder("adb", "install", file.getPath());
@@ -28,7 +33,6 @@ public class Adb {
     }
 
     public void RestartServer(){
-        System.out.println(OS);
         pb = new ProcessBuilder("adb", "kill-server");
         ProcessRunner();
         pb = new ProcessBuilder("adb", "start-server");
@@ -40,24 +44,24 @@ public class Adb {
         ProcessRunner();
     }
 
-    public String logCat(){
-        String output = "";
+    public void logCat(){
         pb = new ProcessBuilder("adb","logcat");
         try {
             pc = pb.start();
+            isRunning = pc.isAlive();
             System.out.printf("zapnut proces\n");
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(pc.getInputStream()));
             System.out.println("zaveden bufferedreader\n");
-            String line = null;
+            String line;
             while ((line = bufferedReader.readLine()) != null){
-                System.out.printf("ctu \n");
-                output += line + bufferedReader.readLine() + "\n";
-                System.out.printf(line);
+                adbLogcatOutput += line + "\n" + bufferedReader.readLine() + "\n";
+                System.out.println(line);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            isRunning = pc.isAlive();
         }
-        return output;
+        isRunning = pc.isAlive();
     }
 
     public String Version(){
@@ -92,7 +96,7 @@ public class Adb {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(pc.getInputStream()));
             while ((line = bufferedReader.readLine()) != null){
                 System.out.println("zapocato cteni");
-                output += line + bufferedReader.readLine() + "\n";
+                output = line + "\n" + bufferedReader.readLine() + "\n";
             }
             System.out.println(output);
             /**
@@ -104,7 +108,7 @@ public class Adb {
              */
             assert output != null;
             if ((output.contains("Failure")) || (output.contains("error"))){
-                System.out.println("KURVA PICA NEJEDE TO!!!");
+                new Dialogy().Message(Alert.AlertType.ERROR, "Error", "Neco se pojebalo", "Kurva pica", output);
             }
             pc.waitFor();
         } catch (IOException e) {
@@ -115,5 +119,13 @@ public class Adb {
             System.out.println("no pica kurva!!!!!!!");
         }
         System.out.println("Done");
+    }
+
+    public String getAdbLogcatOutput() {
+        return adbLogcatOutput;
+    }
+
+    public Boolean getIsRunning() {
+        return isRunning;
     }
 }

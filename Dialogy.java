@@ -90,4 +90,40 @@ class Dialogy {
         alert.showAndWait();
     }
 
+    public void Message(Alert.AlertType alertType,String nadpis, String popis, String vyjimka, String text){
+        Alert alert = new Alert(alertType);
+        alert.setTitle(nadpis);
+        alert.setHeaderText(popis);
+        alert.setContentText(vyjimka);
+
+        /*
+        // Create expandable message box
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        String messageText = stringWriter.toString();
+        */
+
+        TextArea textArea = new TextArea(text);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+        GridPane expContent = new GridPane();
+        expContent.setMaxWidth(Double.MAX_VALUE);
+        expContent.add(textArea, 0, 0);
+
+        // Set expandable Exception into the dialog pane.
+        alert.getDialogPane().setExpandableContent(expContent);
+        /*alert.getDialogPane().setOnMousePressed(event -> {
+            alert.getGraphic().getScene().getWindow().setHeight(400);
+            alert.getGraphic().getScene().getWindow().setWidth(600);
+        });*/
+
+        alert.showAndWait();
+    }
+
 }

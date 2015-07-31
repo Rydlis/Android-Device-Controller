@@ -2,27 +2,28 @@ package sample;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 
-public class Controller {
+public class Controller implements Initializable {
 
     @FXML
     private TextArea textArea;
 
-    protected static String OS = "";
+    private String OS = "";
 
     private Dialogy dialogy = new Dialogy();
     private Settings settings = new Settings();
-    private Adb adb = new Adb();
+    private Adb adb = new Adb(OS);
     private FileOperator fileOperator = new FileOperator();
 
-    public String getOsType() {
-        if (System.getProperty("os.name").equals("Windows")) OS = "win";
-        if (System.getProperty("os.name").equals("Linux")) OS = "nix";
-        if (System.getProperty("os.name").equals("Mac")) OS = "mac";
-        return OS;
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.OS = Main.OS;
     }
 
     /* handlery pro ADB */
@@ -47,7 +48,10 @@ public class Controller {
     }
 
     public void handleAdbLogcat(ActionEvent event) {
-        textArea.setText(adb.logCat());
+       new Thread(adb::logCat).start();
+        new Thread(() -> {
+            textArea.setText(adb.getAdbLogcatOutput());
+        }).start();
     }
 
     public void handleAdbStart(ActionEvent event) {
