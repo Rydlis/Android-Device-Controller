@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,9 +13,10 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
 
     @FXML
-    private TextArea textArea;
+    protected TextArea textArea;
 
     private String OS = "";
+    private Boolean adbIsRunning;
 
     private Dialogy dialogy = new Dialogy();
     private Settings settings = new Settings();
@@ -25,6 +27,7 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.OS = Main.OS;
     }
+
 
     /* handlery pro ADB */
     public void handleInstallApk(ActionEvent event) {
@@ -48,14 +51,12 @@ public class Controller implements Initializable {
     }
 
     public void handleAdbLogcat(ActionEvent event) {
-       new Thread(adb::logCat).start();
-        new Thread(() -> {
-            textArea.setText(adb.getAdbLogcatOutput());
-        }).start();
+        new Thread(adb::logCat).start();
+        adbIsRunning = true;
     }
 
     public void handleAdbStart(ActionEvent event) {
-        adb.Start();
+        adb.StartServer();
     }
 
     public void handleRestartServer(ActionEvent event) {
@@ -80,10 +81,14 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Funkce na vypnuti apliakce pres dialogove okno
+     */
     public void handleCloseApp(ActionEvent event) {
         ButtonType volba = dialogy.Confirm("Close", "Do you really want to leave this program?").get();
         if (volba == ButtonType.OK) {
+            Platform.exit();
             System.exit(0);
-        } else event.consume();
+        } else event.consume();         // event.consume() zaruci to ze se zrusi volani na vypntui aplikace
     }
 }

@@ -32,7 +32,10 @@ public class Main extends Application {
         primaryStage.show();
         primaryStage.setOnCloseRequest(event -> {
             ButtonType buttonType = dialogy.Confirm("Close", "Do you really want to leave this program?").get();
-            if (buttonType == ButtonType.OK) Platform.exit();
+            if (buttonType == ButtonType.OK) {
+                Platform.exit();
+                System.exit(0);
+            }
             else event.consume();
         });
     }

@@ -48,16 +48,28 @@ public class Settings extends Application{
         });
     }
 
+    /**
+     * Vybrani cesty k souboru ADB, plati pouze pro Windows a Mac
+     * @param event
+     */
     public void handleChooseAdbPath (ActionEvent event){
         ADB_PATH = fileOperator.open().getPath();
         adb_path_textfield.setText(ADB_PATH);
     }
 
+    /**
+     * Vybrani cesty k souboru Fastboot, plati pouze pro Windows a Mac
+     * @param event
+     */
     public void handleChooseFastbootPath (ActionEvent event){
         FASTBOOT_PATH = fileOperator.open().getPath();
         fastboot_path_textfield.setText(FASTBOOT_PATH);
     }
 
+    /**
+     * Ulozeni nastaveni do textoveho souboru a prepnuti Stage na Main
+     * @param event
+     */
     public void handleSaveAndBack(ActionEvent event){
         new Main().loadMainScreen(settingsStage);
     }

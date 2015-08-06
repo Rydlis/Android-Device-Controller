@@ -125,5 +125,4 @@ class Dialogy {
 
         alert.showAndWait();
     }
-
 }
