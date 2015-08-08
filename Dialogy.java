@@ -9,6 +9,7 @@
 package sample;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
@@ -96,13 +97,6 @@ class Dialogy {
         alert.setHeaderText(popis);
         alert.setContentText(vyjimka);
 
-        /*
-        // Create expandable message box
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        String messageText = stringWriter.toString();
-        */
-
         TextArea textArea = new TextArea(text);
         textArea.setEditable(false);
         textArea.setWrapText(true);
@@ -118,11 +112,21 @@ class Dialogy {
 
         // Set expandable Exception into the dialog pane.
         alert.getDialogPane().setExpandableContent(expContent);
-        /*alert.getDialogPane().setOnMousePressed(event -> {
-            alert.getGraphic().getScene().getWindow().setHeight(400);
-            alert.getGraphic().getScene().getWindow().setWidth(600);
-        });*/
 
         alert.showAndWait();
+    }
+
+    public Optional<ButtonType> Vyber(Alert.AlertType alertType, String nadpis, String popis, String button1, String button2, String button3, String button4){
+        Alert alert = new Alert(alertType);
+        alert.setTitle(nadpis);
+        alert.setHeaderText(popis);
+
+        ButtonType buttonTypeOne = new ButtonType("One");
+        ButtonType buttonTypeTwo = new ButtonType("Two");
+        ButtonType buttonTypeThree = new ButtonType("Three");
+        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeThree, buttonTypeCancel);
+        return alert.showAndWait();
     }
 }

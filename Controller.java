@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import java.net.URL;
@@ -15,7 +16,7 @@ public class Controller implements Initializable {
     @FXML
     protected TextArea textArea;
 
-    private String OS = "";
+    private String OS;
     private Boolean adbIsRunning;
 
     private Dialogy dialogy = new Dialogy();
@@ -32,7 +33,7 @@ public class Controller implements Initializable {
     /* handlery pro ADB */
     public void handleInstallApk(ActionEvent event) {
         try {
-            adb.Install(fileOperator.open());
+            adb.InstallApk(fileOperator.open());
         } catch (NullPointerException e){
             dialogy.Error("Error", "You did not choose any file!");
         }
@@ -43,7 +44,7 @@ public class Controller implements Initializable {
     }
 
     public void handleRebootDevice(ActionEvent event) {
-        System.out.println("pica");
+        adb.RebootDevice(dialogy.Vyber(Alert.AlertType.CONFIRMATION, "vyber","vyber","vyber","vyber","vyber","vyber").get().getText());
     }
 
     public void handleShutdownDevice(ActionEvent event) {

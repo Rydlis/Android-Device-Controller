@@ -1,7 +1,6 @@
 package sample;
 
 import javafx.scene.control.Alert;
-
 import java.io.*;
 
 /**
@@ -24,10 +23,21 @@ public class Adb {
     private Boolean isRunning = false;
 
     /**
+     * Funkce na restartovani zarizeni
+     * @param neco - urcuje zda se zarizeni restartuje normalnim zpusobem,
+     *             do recovery nebo do bootloader rezimu
+     */
+    public void RebootDevice(String neco) {
+        System.out.println(neco);
+        pb = new ProcessBuilder("adb", "reboot", neco);
+        ProcessRunner();
+    }
+
+    /**
      * Funkce na instalaci aplikace
      * @param file - soubor predavan z FileChooseru
      */
-    public void Install (File file){
+    public void InstallApk(File file){
         pb = new ProcessBuilder("adb", "install", file.getPath());
         ProcessRunner();
     }
@@ -76,7 +86,7 @@ public class Adb {
     /**
      * Funkce na zjisteni verze ADB nainstalovaneho v pocitaci
      * a pote String s verzi posle zpatky do Controlleru, kde se zobrazi pres funky Info ze tridy Dialogy
-     * @return String output
+     * @return output - vraceni stringu s prave bezicim ADB serverem
      */
     public String Version(){
         String output= "";
@@ -93,7 +103,7 @@ public class Adb {
     }
 
     public void Device(){
-
+        System.out.println("HAHAHA, tahle funkce jeste neni");
     }
 
     /**
@@ -126,14 +136,12 @@ public class Adb {
                     new Dialogy().Message(Alert.AlertType.ERROR, "Error", "Neco se pojebalo", "Kurva pica", output);
                 }
                 pc.waitFor();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e){
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             } catch (NullPointerException e){
-                System.out.println("no pica kurva!!!!!!!");
+                new Dialogy().Error("Chyba", "Chyba pri vykonu procesu");
             }
-            System.out.println("Done");
+            System.out.println("Hotovo");
         }).start();
     }
 
