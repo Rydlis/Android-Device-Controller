@@ -125,7 +125,7 @@ public class Adb {
                 }
                 System.out.println(output);
                 /**
-                 * Pokud je VM zapnuta s parametrem -enableassertions, assert je chova jako
+                 * Pokud je VM zapnuta s parametrem -enableassertions, assert se chova jako
                  *  if (output == null) {
                  *      throw new AssertionError();
                  *   }
