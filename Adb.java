@@ -9,7 +9,10 @@ import java.io.*;
  */
 public class Adb {
 
-    //* konstruktor bez parametru
+    /**
+     * Konstruktor tridy s parametrem OS
+     * @param OS - string urcujici jak se maji modifikovat ruzne prikazy
+     */
     public Adb(String OS){
         this.OS = OS;
     }
@@ -30,7 +33,12 @@ public class Adb {
     public void RebootDevice(String neco) {
         System.out.println(neco);
         pb = new ProcessBuilder("adb", "reboot", neco);
-        ProcessRunner();
+        ProcessRunner(pb);
+    }
+
+    public void ShutdownDevice(){
+        pb = new ProcessBuilder("adb","shell","reboot","-p");
+        ProcessRunner(pb);
     }
 
     /**
@@ -39,7 +47,7 @@ public class Adb {
      */
     public void InstallApk(File file){
         pb = new ProcessBuilder("adb", "install", file.getPath());
-        ProcessRunner();
+        ProcessRunner(pb);
     }
 
     /**
@@ -47,7 +55,7 @@ public class Adb {
      */
     public void StartServer(){
         pb = new ProcessBuilder("adb", "start-server");
-        ProcessRunner();
+        ProcessRunner(pb);
     }
 
     /**
@@ -64,23 +72,26 @@ public class Adb {
      */
     public void KillServer(){
         pb = new ProcessBuilder("adb", "kill-server");
-        ProcessRunner();
+        ProcessRunner(pb);
     }
 
     public void logCat(){
         pb = new ProcessBuilder("adb","logcat");
-        try {
-            pc = pb.start();
-            System.out.printf("zapnut proces\n");
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(pc.getInputStream()));
-            System.out.println("zaveden bufferedreader\n");
-            while ((line = bufferedReader.readLine()) != null){
-                adbLogcatOutput += line + "\n" + bufferedReader.readLine() + "\n";
-                System.out.println(line);
+        pb.redirectOutput();
+        new Thread(() -> {
+            try {
+                pc = pb.start();
+                System.out.printf("zapnut proces\n");
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(pc.getInputStream()));
+                System.out.println("zaveden bufferedreader\n");
+                while ((line = bufferedReader.readLine()) != null){
+                    adbLogcatOutput += line + "\n" + bufferedReader.readLine() + "\n";
+                    System.out.println(line);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
     /**
@@ -110,20 +121,20 @@ public class Adb {
      * pomocna funkce ProcessRunner, slouzi k aktualnimu behu prikazu pro OS, uprava a zadani prikazu pro OS je delano rovnou ve funkcich
      * ktere volaji ProcessRunner
      */
-    private void ProcessRunner(){
+    private void ProcessRunner(ProcessBuilder processBuilder){
         new Thread(() -> {
-            Process pc;
             try {
-                pc = pb.start();
+                pc = processBuilder.start();
                 System.out.println("proces zacal");
                 String line;
                 String output = null;
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(pc.getInputStream()));
                 while ((line = bufferedReader.readLine()) != null){
                     System.out.println("zapocato cteni");
+                    assert bufferedReader.readLine().isEmpty();
                     output = line + "\n" + bufferedReader.readLine() + "\n";
                 }
-                System.out.println(output);
+                pc.waitFor();
                 /**
                  * Pokud je VM zapnuta s parametrem -enableassertions, assert se chova jako
                  *  if (output == null) {
@@ -135,11 +146,10 @@ public class Adb {
                 if ((output.contains("Failure")) || (output.contains("error"))){
                     new Dialogy().Message(Alert.AlertType.ERROR, "Error", "Neco se pojebalo", "Kurva pica", output);
                 }
-                pc.waitFor();
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            } catch (NullPointerException e){
                 new Dialogy().Error("Chyba", "Chyba pri vykonu procesu");
+            } catch (NullPointerException e){
+                System.out.println("funkce zustala bez odpovedi programu");
             }
             System.out.println("Hotovo");
         }).start();
